@@ -4,7 +4,7 @@
 
 - **Project Type**: Greenfield
 - **Start Date**: 2026-09-08T01:39:00Z
-- **Current Stage**: CONSTRUCTION - Code Generation - Artifact Review
+- **Current Stage**: CONSTRUCTION - Code Generation - Local Repository Artifact Review
 
 ## Workspace State
 
@@ -41,19 +41,19 @@
 
 - [x] Workspace Detection
 - [x] Reverse Engineering (skipped: greenfield)
-- [x] Requirements Analysis
-- [x] User Stories (approved by continuation request on 2026-09-08)
-- [x] Workflow Planning (approved by continuation request on 2026-09-08)
-- [x] Application Design (approved by continuation request on 2026-09-08)
-- [x] Units Generation (approved: review answer A verified on 2026-09-08)
+- [x] Requirements Analysis (local repository support update; approved by continuation request on 2026-09-08)
+- [x] User Stories (local repository support update; approved by continuation request on 2026-09-08)
+- [x] Workflow Planning (local repository support update; approved with user-directed stage skips on 2026-09-08)
+- [x] Application Design (skipped for local repository support by explicit user direction)
+- [x] Units Generation (skipped for local repository support by explicit user direction; existing single unit retained)
 
 ### CONSTRUCTION PHASE
 
-- [x] Functional Design (planrepo; artifact review answer A verified on 2026-09-08)
-- [x] NFR Requirements (planrepo; approved by explicit chat continuation on 2026-09-08)
-- [x] NFR Design (planrepo; approved by explicit chat continuation on 2026-09-08)
+- [x] Functional Design (skipped for local repository support by explicit user direction)
+- [x] NFR Requirements (skipped for local repository support by explicit user direction)
+- [x] NFR Design (skipped for local repository support by explicit user direction)
 - [x] Infrastructure Design (skipped: approved local-only MVP, no deployment)
-- [ ] Code Generation (planrepo; Part 2 Steps 6–18 complete; Step 19 artifact approval pending; browser smoke unverified)
+- [ ] Code Generation (planrepo; local repository implementation complete; artifact approval pending)
 - [ ] Build and Test
 
 ### OPERATIONS PHASE
@@ -63,7 +63,7 @@
 ## Execution Plan Summary
 
 - **Plan**: `inception/plans/execution-plan.md`
-- **Remaining Stages to Execute**: 2
+- **Remaining Stages to Execute**: Code Generation plan approval → Code Generation → Build and Test
 - **Remaining Sequence**: Code Generation → Build and Test
 - **Implementation Unit**: One defined unit, `planrepo`, covering US-01 through US-05; unit artifacts approved
 - **Skipped Already**: Reverse Engineering (greenfield)
@@ -74,12 +74,11 @@
 ## Current Status
 
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Code Generation - Artifact Review (planrepo)
-- **Last Completed**: Code Generation Step 18 artifact review preparation on 2026-09-08
-- **Next Action**: Review generated code and answer `construction/plans/planrepo-code-generation-artifact-review-questions.md`; Step 19 requires explicit artifact approval
-- **Next Step After Approval**: Record Step 19 approval, then execute Build and Test and verify remaining SM-01 browser interactions
-- **Next Stage After Code Generation Approval**: Build and Test
-- **Status**: Implementation and available verification complete; awaiting generated-code approval. SM-01 browser interactions remain unverified because no browser backend is available.
+- **Current Stage**: Code Generation - Local Repository Artifact Review
+- **Last Completed**: Local repository implementation Steps L5 through L13 on 2026-09-08
+- **Next Action**: Review generated local repository support and explicitly approve or request changes.
+- **Next Step After Approval**: Record Code Generation approval, then execute Build and Test.
+- **Status**: Local Git `HEAD` support is implemented and build/smoke tested; artifact approval is pending.
 
 ## Application Design Summary
 

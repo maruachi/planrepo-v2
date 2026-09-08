@@ -57,3 +57,7 @@ US-01 연결·목록, US-02 안전한 본문, US-03 파싱·대기열, US-04 원
 활성 확장 차단 항목은 없다. 배포 산출물·성능·부하·HA·복원력·계층별 대규모 테스트는 제외한다.
 
 실행 안내는 [README](README.md), HTTP 계약은 [API](api.md), 세부 책임은 [업무](business-logic-summary.md), [API 계층](api-layer-summary.md), [저장](repository-layer-summary.md), [UI](frontend-summary.md)를 참조한다.
+
+## 로컬 저장소 지원 (2026-09-08)
+
+`LocalGitSource`가 작업공간 내부 Git 작업 트리의 `HEAD` tree와 blob을 읽는다. 소스 선택 UI와 `sourceType` DTO를 추가했고 `local:` repository key로 원격 결정과 분리했다. `npm run build`와 `npm run test:smoke`의 SM-02~SM-05 네 테스트가 통과했다. 브라우저 상호작용은 별도 확인이 필요하다.

@@ -3,7 +3,13 @@ const object = (properties: Record<string, unknown>) => ({
   type: "object", properties, required: Object.keys(properties), additionalProperties: false
 });
 
-export const connectionSchema = object({ repositoryUrl: text, folderPath: { type: "string" } });
+export const connectionSchema = {
+  oneOf: [
+    object({ sourceType: { const: "github" }, repositoryUrl: text, folderPath: { type: "string" } }),
+    object({ sourceType: { const: "local" }, localPath: text, folderPath: { type: "string" } }),
+    object({ repositoryUrl: text, folderPath: { type: "string" } })
+  ]
+};
 export const snapshotSchema = object({ snapshotId: text });
 export const documentSchema = object({ snapshotId: text, documentKey: text });
 export const answersSchema = object({

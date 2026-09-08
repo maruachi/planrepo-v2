@@ -28,8 +28,8 @@ export class GitHubSource {
   public constructor(private readonly fetcher: Fetcher = fetch) {}
 
   public validateConnection(input: ConnectionInput): RepositoryScope {
-    const raw = input.repositoryUrl.trim();
-    if (/[\\\x00-\x1f\x7f]/.test(input.repositoryUrl) || !/^https:\/\/github\.com(?::443)?\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/i.test(raw)) {
+    const raw = (input.repositoryUrl ?? "").trim();
+    if (input.sourceType === "local" || /[\\\x00-\x1f\x7f]/.test(input.repositoryUrl ?? "") || !/^https:\/\/github\.com(?::443)?\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/?$/i.test(raw)) {
       throw new AppError("INVALID_INPUT", "Enter a public GitHub repository URL without credentials or extra paths.", false);
     }
     const [owner, repositoryPart] = raw.replace(/^https:\/\/github\.com(?::443)?\//i, "").replace(/\/$/, "").split("/");

@@ -1,5 +1,192 @@
 # AI-DLC Audit Log
 
+## Local Repository Code Generation
+
+**Timestamp**: 2026-09-08T06:52:58Z
+
+**User Input**:
+
+```text
+구현 진행해줘.
+```
+
+**AI Response**: Recorded approval of the local repository Code Generation plan. Implemented source selection, local absolute-path input, workspace real-path containment, Git working-tree and `HEAD` validation, read-only `git rev-parse`, `ls-tree`, and `show` loading, source-separated repository keys, and a local Git smoke test. Existing GitHub smoke coverage remains. `npm run build` and `npm run test:smoke` passed with four smoke tests. Browser UI interaction remains unverified. Security Baseline, Property-Based Testing, and Resiliency Baseline remain disabled; all their rules are N/A.
+
+**Context**: CONSTRUCTION — Code Generation local repository implementation completed; artifact approval gate
+
+---
+
+## Workflow Planning Approval — Interrupted Interaction
+
+**Timestamp**: 2026-09-08T06:47:39Z
+
+**User Input**:
+
+```text
+Approve & Continue
+```
+
+**AI Response**: The interaction was interrupted before approval processing or any workflow action occurred.
+
+**Context**: INCEPTION — Workflow Planning, local repository support
+
+---
+
+## Workflow Planning Override and Code Generation Plan
+
+**Timestamp**: 2026-09-08T06:47:39Z
+
+**User Input**:
+
+```text
+스킵하고 바로 구현 단계로 진행해줘.
+```
+
+**AI Response**: Recorded approval of the local repository execution plan and the explicit override to skip Application Design, Units Generation, Functional Design, NFR Requirements, and NFR Design. Updated the workflow plan and state accordingly. Created a detailed Code Generation amendment with Steps L5 through L13 covering typed source input, real-path validation, read-only Git `HEAD` loading, non-destructive SQLite migration, UI changes, local Git smoke tests, documentation, and verification. Security Baseline, Property-Based Testing, and Resiliency Baseline remain disabled; all their rules are N/A.
+
+**Approval Prompt**:
+
+```text
+로컬 저장소 구현을 위한 Code Generation 계획을 검토해 주세요.
+
+Approve & Generate - 전체 계획과 Steps L5 through L13을 승인하고 구현 시작
+Request Changes - 계획 수정 요청
+```
+
+**Context**: CONSTRUCTION — Code Generation Part 1 approval gate for local repository support
+
+---
+
+## User Stories Approval and Workflow Planning Update
+
+**Timestamp**: 2026-09-08T06:43:46Z
+
+**User Input**:
+
+```text
+진행해줘.
+```
+
+**AI Response**: Recorded the explicit continuation as approval of the local repository personas and user stories. Updated the existing execution plan with an authoritative local repository support amendment. The plan requires minimal Application Design, Units Generation, Functional Design, NFR Requirements, NFR Design, Code Generation, and Build and Test; Infrastructure Design and Operations remain skipped. Mermaid syntax was structurally validated: node IDs use alphanumeric identifiers, every edge endpoint exists, labels contain no unescaped quote or special edge syntax, and the diagram has balanced code fences and valid style declarations. Security Baseline, Property-Based Testing, and Resiliency Baseline remain disabled; all their rules are N/A.
+
+**Approval Prompt**:
+
+```text
+# 📋 Workflow Planning Complete
+
+Please examine the execution plan at: `aidlc-docs/inception/plans/execution-plan.md`
+
+You may:
+- Request Changes - Ask for modifications to the execution plan if required
+- Add Skipped Stages - Choose to include Infrastructure Design or Operations
+- Approve & Continue - Approve plan and proceed to Application Design
+```
+
+**Context**: INCEPTION — User Stories approved; Workflow Planning update approval gate
+
+---
+
+## User Stories Update Generation
+
+**Timestamp**: 2026-09-08T06:39:45Z
+
+**User Input**:
+
+```text
+진행해줘.
+```
+
+**AI Response**: Recorded the explicit continuation as approval of the local repository story update plan. Updated P-01 and US-01, US-02, US-04, and US-05 with local Git source selection, workspace-bound absolute paths, Git working-tree and `HEAD` rules, uncommitted-change exclusion, source-separated decisions, and no local Git mutation. Verified the five user journeys remain INVEST-aligned, map to FR-1 through FR-6, and retain the MVP exclusions. Security Baseline, Property-Based Testing, and Resiliency Baseline remain disabled; all their rules are N/A.
+
+**Approval Prompt**:
+
+```text
+# 📚 User Stories Complete
+
+Please examine the user stories and personas at: `aidlc-docs/inception/user-stories/stories.md` and `aidlc-docs/inception/user-stories/personas.md`
+
+You may:
+- Request Changes - Ask for modifications to the stories or personas based on your review
+- Approve & Continue - Approve user stories and proceed to Workflow Planning
+```
+
+**Context**: INCEPTION — User Stories update generation completed; artifact approval gate
+
+---
+
+## Requirements Approval and User Stories Update Plan
+
+**Timestamp**: 2026-09-08T06:37:35Z
+
+**User Input**:
+
+```text
+진행해줘.
+```
+
+**AI Response**: Recorded the explicit continuation as approval of the local repository support requirements. Reassessed User Stories because source selection and connection are direct user-facing changes. Updated the assessment and created `inception/plans/local-repository-story-update-plan.md`, preserving the approved single persona, journey-based breakdown, five-story scope, and checklist acceptance criteria. No new story-planning questions are needed because all applicable policies are explicitly approved in the requirements.
+
+**Approval Prompt**:
+
+```text
+로컬 저장소 사용자 스토리 갱신 계획을 검토해 주세요.
+
+Request Changes - 계획 수정 요청
+Approve & Generate - 계획 승인 후 페르소나와 사용자 스토리 갱신
+```
+
+**Context**: INCEPTION — Requirements Analysis approved; User Stories update planning approval gate
+
+---
+
+## Requirements Answers — Interrupted Interaction
+
+**Timestamp**: 2026-09-08T06:36:04Z
+
+**User Input**:
+
+```text
+진행해줘./
+```
+
+**AI Response**: The interaction was interrupted before answer validation or any workflow action occurred.
+
+**Context**: INCEPTION — Requirements Analysis, local repository support
+
+---
+
+## Requirements Analysis — Local Repository Support Completed
+
+**Timestamp**: 2026-09-08T06:36:04Z
+
+**User Input**:
+
+```text
+진행해줘.
+```
+
+**AI Response**: Validated the four recorded answers without ambiguity or contradiction: absolute local repository root plus document folder input; access limited to the PlanRepo workspace and descendants; valid Git working tree required; current `HEAD` content only. Updated requirements for source selection, local path validation, read-only Git access, storage separation, errors, and smoke coverage. Updated workflow state to Requirements Analysis review. Security Baseline, Property-Based Testing, and Resiliency Baseline remain disabled; all their rules are N/A. Requested explicit requirements approval before User Stories update.
+
+**Context**: INCEPTION — Requirements Analysis, local repository support; approval gate
+
+---
+
+## Requirements Analysis — Local Repository Support
+
+**Timestamp**: 2026-09-08T06:31:50Z
+
+**User Input**:
+
+```text
+로컬 레포 기준으로도 동작할 수 있게 기능 추가해줘.
+```
+
+**AI Response**: Classified the request as a moderate, multi-component feature enhancement. Existing implementation only accepts public GitHub repository URLs and reads through the GitHub API. Local repository support requires decisions about the input method, filesystem access boundary, Git working-tree validation, and whether to use uncommitted files. Created a dedicated requirements question file. The previously selected Security Baseline, Property-Based Testing, and Resiliency Baseline extensions remain disabled; their rules are not enforced for this MVP change.
+
+**Context**: INCEPTION — Requirements Analysis reopened for local repository source support
+
+---
+
 ## Version Control Request
 
 **Timestamp**: 2026-09-08T06:24:29Z
@@ -1005,5 +1192,21 @@ AGENTS.md가 코드 산출물의 명시적 승인을 요구하므로 Build and T
 **User Input**: "실행 방법 알려줘."
 **AI Response**: "프로젝트 문서와 실행 설정을 확인해서 필요한 준비 사항과 실행 명령을 알려드릴게요. 프로젝트 루트에서 Node 24.12.0을 선택하고, 최초 설치 시 npm ci를 실행한 다음 npm start로 시작합니다. http://127.0.0.1:3000에 접속하며 종료는 Ctrl+C입니다. npm start는 타입 검사와 빌드를 포함합니다."
 **Context**: Read package.json, execution README, start/runtime scripts and app configuration. This is an informational follow-up; no workflow approval or stage transition is inferred. Validated plain Markdown entry; no diagrams or embedded structured data.
+
+---
+
+## GitHub Link Integration Analysis Request
+
+**Timestamp**: 2026-09-08T06:29:30Z
+
+**User Input**:
+
+```text
+현재 레포에서 github link 연동 기능이 어떻게 동작하는지 분석해줘.
+```
+
+**AI Response**: Completed a read-only analysis of the implemented GitHub repository connection flow, covering the Vue input form, local API route, GitHub API adapter, document rendering links, local persistence boundary, error mapping, and smoke-test coverage. No application or configuration changes were made.
+
+**Context**: CONSTRUCTION - Code Generation artifact review; user-requested implementation analysis
 
 ---

@@ -19,7 +19,7 @@ const pending = ref<Record<string, string>>({});
 const operation = ref("");
 const documentLoading = ref(false);
 const documentError = ref("");
-const message = ref("공개 저장소를 연결해 문서를 검토하고 필요한 결정을 모아보세요.");
+const message = ref("공개 GitHub 또는 로컬 Git 저장소를 연결해 문서를 검토하세요.");
 const failed = ref(false);
 const busy = computed(() => operation.value !== "");
 const selectedCount = computed(() => Object.keys(pending.value).length);

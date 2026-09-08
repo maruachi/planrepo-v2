@@ -3,6 +3,7 @@ import fastifyStatic from "@fastify/static";
 import type { AppConfig } from "./app-config.js";
 import { AppError, internalError } from "./errors.js";
 import { GitHubSource } from "./github-source.js";
+import { LocalGitSource } from "./local-git-source.js";
 import { registerRoutes } from "./http/routes.js";
 import { MarkdownExporter } from "./markdown/exporter.js";
 import { MarkdownRenderer } from "./markdown/renderer.js";
@@ -43,7 +44,7 @@ export const createApp = async (config: AppConfig, options: { fetcher?: typeof f
   });
   app.setNotFoundHandler((_request, reply) => reply.code(404).send(new AppError("DOCUMENT_NOT_FOUND", "The requested resource was not found.", false).toResponse()));
   try {
-    registerRoutes(app, new PlanRepoService(new GitHubSource(options.fetcher), new QuestionParser(), new MarkdownRenderer(), store, new MarkdownExporter()));
+    registerRoutes(app, new PlanRepoService(new GitHubSource(options.fetcher), new LocalGitSource(config.rootDirectory), new QuestionParser(), new MarkdownRenderer(), store, new MarkdownExporter()));
     await app.register(fastifyStatic, { root: config.staticDirectory, dotfiles: "deny", index: ["index.html"] });
     await app.ready();
     return app;

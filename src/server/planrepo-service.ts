@@ -3,6 +3,7 @@ import type { AnswerSelection, CommitResult, ConnectionInput, DocumentKey, Docum
 import { nowIso } from "./domain/identity.js";
 import { AppError } from "./errors.js";
 import { GitHubSource } from "./github-source.js";
+import { LocalGitSource } from "./local-git-source.js";
 import { MarkdownExporter } from "./markdown/exporter.js";
 import { MarkdownRenderer } from "./markdown/renderer.js";
 import { QuestionParser } from "./markdown/question-parser.js";
@@ -14,6 +15,7 @@ export class PlanRepoService {
 
   public constructor(
     private readonly source: GitHubSource,
+    private readonly localSource: LocalGitSource,
     private readonly parser: QuestionParser,
     private readonly renderer: MarkdownRenderer,
     private readonly store: DecisionStore,
@@ -22,13 +24,14 @@ export class PlanRepoService {
 
   public getRecentConnection(): ConnectionInput | null {
     const connection = this.store.getRecentConnection();
-    return connection ? { repositoryUrl: connection.repositoryUrl, folderPath: connection.folderPath } : null;
+    return connection ? connection.repositoryKey.startsWith("local:") ? { sourceType: "local", localPath: connection.repositoryUrl ?? "", folderPath: connection.folderPath } : { repositoryUrl: connection.repositoryUrl ?? "", folderPath: connection.folderPath } : null;
   }
 
   public async connect(input: ConnectionInput): Promise<WorkspaceView> {
     return this.enqueue(async () => {
-      const scope = this.source.validateConnection(input);
-      const bundle = await this.source.loadMarkdown(scope);
+      const active = input.sourceType === "local" ? this.localSource : this.source;
+      const scope = active.validateConnection(input);
+      const bundle = await active.loadMarkdown(scope);
       const parseResults = new Map(bundle.documents.map((document) => [document.documentKey, this.parser.parse(document)]));
       const next = { snapshotId: randomUUID(), sourceBundle: bundle, parseResults };
       const workspace = this.workspace(next);
@@ -105,7 +108,7 @@ export class PlanRepoService {
     const effective = context.sourceBundle.documents.flatMap((document) => this.effective(context, document.documentKey));
     return {
       snapshotId: context.snapshotId,
-      connection: { repositoryUrl: context.sourceBundle.scope.canonicalUrl, folderPath: context.sourceBundle.scope.folderPath },
+      connection: context.sourceBundle.scope.repositoryKey.startsWith("local:") ? { sourceType: "local", localPath: context.sourceBundle.scope.canonicalUrl, folderPath: context.sourceBundle.scope.folderPath } : { sourceType: "github", repositoryUrl: context.sourceBundle.scope.canonicalUrl, folderPath: context.sourceBundle.scope.folderPath },
       documents: context.sourceBundle.documents.map((document) => {
         const questions = effective.filter((question) => question.documentKey === document.documentKey);
         return { documentKey: document.documentKey, relativePath: document.relativePath, unresolvedCount: questions.filter((question) => question.status === "unresolved").length, completedCount: questions.filter((question) => question.status !== "unresolved").length };

@@ -44,3 +44,7 @@
 인증·토큰·비공개 저장소·원격 변경·배포·성능·확장성·고가용성·속성 기반 테스트는 제외한다. 확장 Security/PBT/Resiliency는 모두 비활성이며 모든 확장 규칙은 N/A다. 기존 최소 입력·표시·저장 안전성은 유지한다.
 
 자세한 API는 [api.md](api.md), 실제 검증 결과와 제약은 [implementation-summary.md](implementation-summary.md)를 참조한다.
+
+## 로컬 Git 소스
+
+연결 화면에서 `로컬 Git`을 선택하고 PlanRepo 작업공간 안의 절대 저장소 루트와 문서 폴더를 입력한다. 앱은 현재 `HEAD`의 Markdown만 읽으며 작업 트리와 Git 상태를 변경하지 않는다.

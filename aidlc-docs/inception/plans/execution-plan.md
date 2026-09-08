@@ -1,5 +1,101 @@
 # PlanRepo MVP 실행 계획
 
+## 로컬 저장소 지원 변경 계획 (2026-09-08, 현재 요청의 기준)
+
+이 절은 기존 GitHub 전용 MVP 계획을 보완하며, 로컬 저장소 지원 요청에 대해서는 아래 결정과 순서가 우선한다. 기존 구현은 GitHub 전용 상태로 생성됐고, 새 요구사항은 아직 구현되지 않았다.
+
+### 계획 작성 체크리스트
+
+- [x] 1. 승인된 로컬 저장소 요구사항, P-01, 갱신된 사용자 스토리와 기존 구현·설계 산출물을 읽는다.
+- [x] 2. UI, 소스 로더, 공유 계약, SQLite 식별, API, 테스트와 읽기 전용 Git 경계에 대한 영향을 분석한다.
+- [x] 3. 변경된 사용자 흐름에 필요한 후속 단계를 결정한다.
+- [x] 4. 워크플로 시각화와 텍스트 대안을 작성하고 Mermaid 노드 ID·레이블·간선·스타일 구문을 검증한다.
+- [x] 5. 상태와 감사 기록을 갱신하고 이 변경 계획의 승인 대기를 준비한다.
+- [x] 6. 사용자의 실행 계획 승인을 기록하고 Code Generation으로 진행한다. (2026-09-08 사용자 지시로 Application Design, Units, Functional Design, NFR Requirements, NFR Design 생략)
+
+### 상세 영향과 위험
+
+| 영역 | 변경 |
+| --- | --- |
+| 사용자 화면 | GitHub와 로컬 Git 소스 선택, 로컬 절대 저장소 경로 입력, 기존 문서 폴더 입력과 소스별 오류 표시를 추가한다. |
+| 소스 로드 | GitHub API 읽기 외에 작업공간 내부 Git 작업 트리의 `HEAD` 트리를 읽는 로컬 소스 어댑터를 추가한다. |
+| 계약·저장 | 연결 입력과 저장소 식별에 소스 유형을 포함하고, 최근 연결과 결정이 원격·로컬 소스 사이에서 분리되도록 SQLite 마이그레이션을 설계한다. |
+| API·서비스 | 연결 요청의 검증과 소스 선택을 추가하고, 기존 문서·질문·내보내기 API는 활성 조회 컨텍스트를 통해 두 소스를 공통 처리한다. |
+| 보안 최소선 | 실제 경로가 작업공간 안인지 확인하고, Git 작업 트리·`HEAD` 유무를 검증한다. 읽기 명령만 허용하며 작업 트리, Git 상태, 원격 저장소를 변경하지 않는다. |
+| 테스트 | 로컬 Git fixture의 `HEAD` 문서 로드, 작업공간 밖·일반 폴더·`HEAD` 없음 거부, 미커밋 변경 제외, 저장 결정 분리 및 비수정을 핵심 스모크에 추가한다. |
+
+- **위험 수준**: 중간. 사용자 입력·파일시스템 경계·Git 명령·SQLite 호환성과 기존 원격 흐름을 함께 변경한다.
+- **되돌리기 복잡도**: 낮음. 새 로컬 소스 코드는 원격 소스와 분리하고, 데이터 마이그레이션은 이전 결정이 보존되는 방식으로 설계한다.
+- **검증 복잡도**: 중간. 원격 회귀와 로컬 `HEAD`·경계·비수정 동작을 같은 스모크 흐름에서 확인한다.
+
+### 단계 결정
+
+| 단계 | 결정 | 깊이 | 근거 |
+| --- | --- | --- | --- |
+| Requirements Analysis | 완료 | 표준 | 로컬 입력·경계·Git 작업 트리·`HEAD` 정책을 승인했다. |
+| User Stories | 완료 | 최소 | P-01과 다섯 사용자 여정의 로컬 소스 인수 조건을 승인했다. |
+| Workflow Planning | 승인 대기 | 표준 | 이 변경의 영향·실행 순서·검증 범위를 정한다. |
+| Application Design | 실행 | 최소 | GitHub 전용 C3 책임을 원격·로컬 소스 조정 책임으로 확장하고 C1·C2·C6 계약을 갱신해야 한다. |
+| Units Generation | 실행 | 최소 | API·연결 데이터·SQLite 상태가 바뀌지만 단일 `planrepo` 단위는 유지된다. |
+| Functional Design | 실행 | 최소 | 경로·실제 경로·Git 작업 트리·`HEAD` 검증, 원본 버전, 식별과 마이그레이션 규칙을 정의해야 한다. |
+| NFR Requirements | 실행 | 최소 | 파일시스템 경계와 읽기 전용 Git 실행에 대한 최소 보안·오류 요구를 구체화한다. |
+| NFR Design | 실행 | 최소 | 승인된 최소 NFR을 컴포넌트 경계와 로컬 오류 처리 흐름에 반영한다. |
+| Infrastructure Design | 생략 | N/A | 로컬 프로세스, 작업공간 경로, SQLite 파일만 사용하며 배포·클라우드 자원은 추가하지 않는다. |
+| Code Generation | 실행 | 최소 | 승인된 설계를 바탕으로 기존 GitHub 기능을 보존하며 로컬 소스 기능과 스모크를 구현한다. |
+| Build and Test | 실행 | 핵심 경로 | 원격 회귀와 로컬 Git 지원의 핵심 경로를 함께 검증한다. |
+| Operations | 생략 | N/A | 배포가 제외된 placeholder 단계다. |
+
+### 사용자 단계 재정의
+
+사용자는 2026-09-08에 중간 설계 단계를 생략하고 구현 단계로 바로 진행하도록 명시했다. 이에 따라 Application Design, Units Generation, Functional Design, NFR Requirements 및 NFR Design은 이번 변경에서 생략한다. 이 단계들의 문서는 현재 GitHub 전용 구현을 기준으로 작성됐으므로 로컬 저장소 기능의 제약을 구현 단계에서 요구사항·사용자 스토리와 Code Generation 계획으로 직접 추적한다. Infrastructure Design과 Operations의 생략 결정은 유지한다.
+
+### 워크플로 시각화
+
+```mermaid
+flowchart TD
+    REQ["Requirements - COMPLETE"] --> US["User Stories - COMPLETE"]
+    US --> WP["Workflow Plan - REVIEW"]
+    WP --> AD["Application Design - EXECUTE"]
+    AD --> UG["Units - EXECUTE"]
+    UG --> FD["Functional Design - EXECUTE"]
+    FD --> NR["NFR Requirements - EXECUTE"]
+    NR --> ND["NFR Design - EXECUTE"]
+    ND --> CG["Code Generation - EXECUTE"]
+    CG --> BT["Build and Test - EXECUTE"]
+    ND -.-> ID["Infrastructure - SKIP"]
+    BT -.-> OP["Operations - SKIP"]
+    style REQ fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
+    style US fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
+    style WP fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000
+    style AD fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000
+    style UG fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000
+    style FD fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000
+    style NR fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000
+    style ND fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000
+    style CG fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
+    style BT fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
+    style ID fill:#BDBDBD,stroke:#424242,stroke-width:2px,stroke-dasharray: 5 5,color:#000
+    style OP fill:#BDBDBD,stroke:#424242,stroke-width:2px,stroke-dasharray: 5 5,color:#000
+    linkStyle default stroke:#333,stroke-width:2px
+```
+
+텍스트 대안: 요구사항 완료 → 사용자 스토리 완료 → 실행 계획 검토 → Application Design → Units → Functional Design → NFR Requirements → NFR Design → Code Generation → Build and Test. Infrastructure Design과 Operations는 생략한다.
+
+### 성공 기준과 확장 규칙
+
+- 공개 GitHub의 기존 연결·문서 탐색·질문·결정·내보내기 흐름이 계속 동작한다.
+- 작업공간 내부의 유효한 로컬 Git 작업 트리에서 `HEAD`의 지정 폴더 Markdown을 읽을 수 있다.
+- 작업공간 밖 경로·일반 폴더·`HEAD` 없음·미커밋 변경은 요구사항에 맞게 거부하거나 제외한다.
+- 원격과 로컬 소스의 최근 연결과 결정이 분리되며, 로컬 파일과 Git 상태는 변경되지 않는다.
+- 핵심 스모크와 빌드가 통과한다.
+
+| 확장 | Enabled | 적용 결과 |
+| --- | --- | --- |
+| Security Baseline | No | N/A. 승인된 작업공간 경계와 읽기 전용 Git 제약을 요구사항·설계·테스트에 유지한다. |
+| Property-Based Testing | No | N/A. 검증은 핵심 경로 스모크로 한정한다. |
+| Resiliency Baseline | No | N/A. 성능·확장성·고가용성·복원력 설계는 제외한다. |
+
+
 ## 현재 결정과 기준
 
 - 상태: 2026-09-08 사용자의 다음 단계 진행 요청으로 실행 계획 승인 완료.

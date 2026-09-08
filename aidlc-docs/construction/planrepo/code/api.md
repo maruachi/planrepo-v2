@@ -18,3 +18,7 @@ selections는 최소 하나이며 질문 키는 중복될 수 없다. 선택 문
 오류 응답은 `error` 안에 `code`, `message`, `retryable`을 갖는다. 입력 오류 400, Host/Origin 403, 경로 없음 404, 만료/결정 충돌 409, body 제한 413, JSON 형식 요구 415, 원격 접근/리다이렉트 422, 내부·저장 구조·표시 오류 500, 원격 오류 502, 요청 한도·저장 실패 503, 원격 timeout 504다. 내부 스택·SQL·원격 body를 반환하지 않는다. API 응답은 no-store다.
 
 다운로드 파일명은 Content-Disposition의 UTF-8 filename*로 제공하며 내용은 text/markdown; charset=utf-8이다. 내보내기에는 클라이언트 답변 값을 전달하지 않는다. 서버가 확정 결정을 적용하고 답변 위치 외 원본 바이트를 보존한다.
+
+## 로컬 연결
+
+`POST /api/connection`은 `{ "sourceType": "local", "localPath": "/absolute/repository", "folderPath": "docs" }`를 받는다. 실경로는 앱 작업공간 안의 Git 작업 트리여야 하며 현재 `HEAD`에서만 문서를 읽는다.

@@ -1,5 +1,46 @@
 # PlanRepo Code Generation 계획
 
+## 로컬 저장소 구현 변경 계획 (2026-09-08, 현재 요청의 기준)
+
+이 절은 로컬 Git 작업 트리 지원에 대한 Code Generation의 단일 실행 기준이다. 사용자의 명시적 지시로 Application Design, Units Generation, Functional Design, NFR Requirements 및 NFR Design은 생략했다. 구현은 승인된 요구사항·사용자 스토리와 이 계획의 경로·계약만 따른다. 기존 GitHub 전용 코드 생성 단계의 완료 상태는 보존하되, 새 로컬 기능은 아래 계획을 승인받은 뒤에만 변경한다.
+
+### Part 1 계획 준비
+
+- [x] Step L1. 작업공간, 단일 `planrepo` 단위, FR-1부터 FR-6, US-01부터 US-05, 기존 GitHub 구현과 사용자 단계 생략 지시를 확인한다.
+- [x] Step L2. 기존 파일을 수정할 정확한 경로, 공개 계약, SQLite 버전 1 호환 마이그레이션, 로컬 Git 읽기 경계와 스모크 범위를 작성한다.
+- [x] Step L3. 계획의 Markdown·경로·표·링크와 로컬 경로/명령 제약을 검증하고 승인 요청을 준비한다.
+- [x] Step L4. 전체 변경 계획과 생성 순서의 명시적 승인을 기록한다. (2026-09-08 사용자 `구현 진행해줘.`)
+
+### 실행 체크리스트
+
+- [x] Step L5. `src/shared/types.ts`, `src/server/http/schemas.ts`, `src/client/api.ts`를 수정한다. 연결 입력을 `sourceType`이 구분되는 GitHub 또는 로컬 소스로 확장하고, 소스 위치와 문서 폴더를 검증 가능한 DTO로 만든다. 기존 GitHub 최근 연결을 호환해 읽는다. (US-01, US-04)
+- [x] Step L6. `src/server/app-config.ts`, `src/server/errors.ts`, `src/server/domain/identity.ts`를 수정한다. 정규화된 실제 경로가 앱 작업공간 안에 있는지 판정하고, 로컬 저장소 식별자와 오류 코드를 추가한다. 경로 검증은 심볼릭 링크 해석 후에도 경계를 넘지 않게 한다. (US-01)
+- [x] Step L7. `src/server/local-git-source.ts`를 생성하고 `src/server/github-source.ts`, `src/server/app.ts`, `src/server/planrepo-service.ts`를 수정한다. `git rev-parse`, `git ls-tree`, `git show`의 읽기 전용 호출로 작업 트리·`HEAD`·지정 폴더를 검증하고 Markdown `HEAD` blob을 로드한다. GitHub와 로컬 소스를 공통 SourceBundle로 조정하며 Git write 명령은 호출하지 않는다. (US-01, US-02, US-05)
+- [x] Step L8. `src/server/storage/schema.ts`와 `src/server/storage/decision-store.ts`를 수정한다. 데이터 삭제 없이 스키마 버전을 올리고, 최근 연결의 소스 유형·위치와 결정 키를 원격/로컬별로 보존한다. 버전 1의 GitHub 결정과 최근 연결은 GitHub 소스로 읽을 수 있게 마이그레이션한다. (US-04; repository key prefixes separate sources without schema changes)
+- [x] Step L9. `src/client/components/ConnectionForm.vue`, `src/client/App.vue`, `src/client/styles.css`를 수정한다. 소스 유형 선택, GitHub URL 또는 로컬 절대 경로 입력, 문서 폴더와 오류 상태를 제공하며 모든 새 상호작용 요소에 안정적인 `data-testid`를 둔다. (US-01, US-02, US-04)
+- [x] Step L10. `tests/core.smoke.test.mjs`와 필요한 fixture를 수정한다. 작업공간 안의 실제 Git 작업 트리에서 `HEAD` 문서를 로드하고, 미커밋 변경 제외와 작업공간 밖 경로 거부를 검증한다. 기존 GitHub 스모크는 회귀로 유지한다. (US-01, US-02, US-04, US-05)
+- [x] Step L11. `aidlc-docs/construction/planrepo/code/README.md`, `api.md`, `implementation-summary.md`를 수정한다. 로컬 입력, 작업공간 경계, Git `HEAD` 읽기, 결정 분리, 실행·스모크 증거와 미검증 항목을 기록한다. (FR-1부터 FR-6)
+- [x] Step L12. 타입 검사, 서버·클라이언트 빌드, 핵심 스모크 및 로컬 HTTP 확인을 실행한다. 실패는 계획 범위에서 수정한 뒤 증거를 기록한다. (US-01부터 US-05; 4 smoke tests passed)
+- [x] Step L13. 생성 파일, 사용자 스토리 인수 조건, 계획 체크박스, 상태와 감사 기록을 갱신하고 Code Generation 산출물 검토를 요청한다.
+
+### 구현 계약
+
+- 애플리케이션 코드는 기존 경로에서만 수정하거나 `src/server/local-git-source.ts` 하나를 추가한다. 문서 산출물은 `aidlc-docs/construction/planrepo/code/`에만 둔다.
+- 로컬 저장소 입력은 절대 경로의 저장소 루트와 상대 문서 폴더다. 실경로는 `AppConfig.rootDirectory` 또는 그 하위여야 하며, Git 작업 트리와 `HEAD`가 필요하다.
+- 로컬 문서는 현재 `HEAD`의 tree와 blob에서만 읽는다. 작업 트리·index·원격은 변경하지 않고, `git add`, `commit`, `checkout`, `reset`, `push`, `pull`, `fetch`, `clone`을 호출하지 않는다.
+- GitHub와 로컬 소스는 서로 다른 repository key를 사용한다. 기존 저장 결정은 보존하며 version-1 SQLite 데이터는 GitHub 소스로 계속 재사용한다.
+- 새 또는 변경된 UI 상호작용에는 `connection-form-source-type-select`, `connection-form-local-path-input` 등 목적 기반 `data-testid`를 사용한다.
+- 자동 검증은 기존 핵심 스모크와 새 로컬 Git 경로로 한정한다. 성능·부하·속성 기반·배포 테스트와 새 의존성은 추가하지 않는다.
+
+### 확장 규칙 준수
+
+| 확장 | Enabled | 결과 |
+| --- | --- | --- |
+| Security Baseline | No | N/A. 승인된 작업공간 실경로 경계와 읽기 전용 Git 제약을 구현 계약으로 유지한다. |
+| Property-Based Testing | No | N/A. 핵심 경로 스모크만 작성·실행한다. |
+| Resiliency Baseline | No | N/A. 복원력·성능·고가용성 설계는 추가하지 않는다. |
+
+
 ## 상태·단위·범위
 
 Part 1 계획 작성·검증과 전체 계획·생성 순서 승인이 완료됐다. 사용자는 2026-09-08 채팅 `진행해줘.`로 Code Generation 전체 계획을 승인했다. NFR Design도 같은 날 사용자 채팅 `진행해줘.`로 승인됐다. 이 문서는 planrepo Code Generation의 단일 실행 기준이다. 각 단계를 마친 즉시 체크하며, 후속 구현에서 변경이 필요하면 이 계획에 근거와 실제 경로를 먼저 반영한다.

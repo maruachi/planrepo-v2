@@ -6,7 +6,9 @@ export type SnapshotId = string;
 export type RepositoryKey = string;
 
 export interface ConnectionInput {
-  repositoryUrl: string;
+  sourceType?: "github" | "local";
+  repositoryUrl?: string;
+  localPath?: string;
   folderPath: string;
 }
 

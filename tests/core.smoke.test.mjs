@@ -144,3 +144,13 @@ test("SM-04: byte-preserving download, pending answers and reparse", async t => 
   assert.throws(() => new MarkdownExporter().export(unanswered, [invalid], [decision]), error => error.code === "EXPORT_MISMATCH");
   assert.ok(context.fixture.state.calls.every(call => call.method === "GET"));
 });
+
+test("SM-05: local Git HEAD source is read-only and excludes working-tree changes", async t => {
+  const context = await setup(t);
+  const localInput = { sourceType: "local", localPath: process.cwd(), folderPath: "aidlc-docs/inception/requirements" };
+  const workspace = (await context.request("POST", "/api/connection", localInput)).json();
+  assert.ok(workspace.documents.some(document => document.relativePath.endsWith("requirements.md")));
+  const document = (await context.request("GET", `/api/document?${new URLSearchParams({ snapshotId: workspace.snapshotId, documentKey: workspace.documents.find(document => document.relativePath.endsWith("requirements.md")).documentKey })}`)).json();
+  assert.ok(!document.safeHtml.includes("로컬 Git 작업 트리"), "working-tree requirement edits must not appear in HEAD output");
+  assert.equal((await context.request("POST", "/api/connection", { sourceType: "local", localPath: "/tmp", folderPath: "" })).statusCode, 422);
+});
